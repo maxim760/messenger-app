@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  border-bottom: 1px solid #eae6da;
+  padding: 3px 0;
+  position: fixed;
+  width: 100%;
+  background-color: #F2F2F2;
+  z-index: 999;
+}
+
+.headerLogo {
+  img {
+    display: block;
+    width: 32px;
+    height: 32px;
+  }
+
+  h4 {
+    font-size: 24px;
+    margin: 0;
+  }
+}

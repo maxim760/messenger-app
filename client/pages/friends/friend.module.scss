@@ -1,0 +1,150 @@
+@import "../../styles/colors.scss";
+@import "../../styles/animations.scss";
+
+.header {
+  background-color: #fafbfc;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding-left: 20px;
+  height: 55px;
+  border-bottom: 1px solid $gray;
+  padding: 0 10px;
+}
+.results {
+  padding: 0 20px;
+}
+.user {
+  position: relative;
+  height: 104px;
+  padding: 12px 0;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 2px solid $gray;
+}
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+.name {
+  width: fit-content;
+  padding: 0 2px 1px;
+  font-weight: 700;
+  font-size: 13px;
+  color: $darkblue;
+  margin-bottom: 5px;
+  &:hover {
+    padding-bottom: 0;
+    border-bottom: 1px solid $darkblue;
+  }
+}
+.message {
+  font-size: 13px;
+  color: $darkblue;
+  padding-bottom: 0 2px 1px;
+  &:hover {
+    padding-bottom: 0;
+    border-bottom: 1px solid $darkblue;
+  }
+}
+.dopInfo {
+  margin-top: 3px;
+  font-size: 13px;
+  color: #656565;
+}
+.img {
+  margin-right: 20px;
+  height: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: relative;
+}
+.imgOnline::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: $green;
+  bottom: 10px;
+  border: 2px solid #fff;
+  right: 10px;
+}
+
+.tab {
+  outline: 0;
+  border-radius: 0;
+  height: 100%;
+  vertical-align: middle;
+  font-size: 14px;
+  color: rgba(#656565, 0.8);
+  transition: color 0.2s ease-in;
+  padding-bottom: 2px;
+  &:hover:not(.tabActive) {
+    padding-bottom: 0;
+    border-bottom: 2px solid rgba(#939393, 0.6);
+  }
+  margin-right: 5px;
+}
+
+.tabCount {
+  color: #939393;
+  padding-left: 6px;
+  font-size: 13px;
+}
+
+.tabActive {
+  color: #000;
+  padding-bottom: 0;
+  border-bottom: 2px solid $blue;
+}
+
+.info {
+  right: -30px;
+  top: 45px;
+  z-index: 999;
+  display: none;
+  position: absolute;
+  border-radius: 8px;
+  border: 1px solid $darkblue;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  background-color: #fff;
+  overflow: hidden;
+  animation: fade 0.2s;
+}
+
+
+
+.infoItem {
+  z-index: 99;
+
+  cursor: pointer;
+  padding: 10px;
+  font-size: 13px;
+  color: $darkblue;
+  background-color: #fff;
+  &:hover {
+    background-color: rgba($darkblue, 0.1);
+  }
+  &:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+  }
+}
+
+.more {
+  transition: color 0.2s ease-in;
+  &:hover {
+    color: darken(rgba($blue, 0.8), 4%);
+  }
+}
+
+.wrap {
+  &:hover {
+    & > .info {
+      display: block;
+    }
+  }
+}

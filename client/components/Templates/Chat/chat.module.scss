@@ -1,0 +1,69 @@
+@import "../../../styles/colors.scss";
+
+.app {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.panel {
+  width: 250px;
+  display: flex;
+  margin-top: 10px;
+  position: fixed;
+}
+
+.main {
+  margin-left: 250px;
+  flex: 1;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: -3px -3px 8px rgba(#000, 0.07), -3px 3px 8px rgba(#000, 0.07),
+    3px -3px 8px rgba(#000, 0.07), 3px 3px 8px rgba(#000, 0.07);
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-bottom: 2px solid $gray;
+  height: 50px;
+  padding-top: 10px;
+}
+
+.iconMini {
+  color: #5181b8;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 9px;
+}
+.category {
+  width: 100%;
+  justify-content: space-between;
+  margin-right: 10px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 14px;
+  padding: 5px;
+  cursor: pointer;
+    &:hover {
+      background-color: #e5e4ee;
+  }
+}
+
+.notify {
+  margin-left: auto;
+  font-size: 12px;
+  height: 18px;
+  width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
+  font-weight: 600;
+  background-color: #bac1ca;
+}

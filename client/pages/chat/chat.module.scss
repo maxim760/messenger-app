@@ -1,0 +1,209 @@
+@import "../../styles/colors.scss";
+@import "../../styles/animations.scss";
+
+.page {
+  flex: none;
+}
+
+.wrap {
+  position: relative;
+  z-index: 99;
+}
+
+.header {
+  margin-top: 0;
+  // margin-top: auto;
+  // overflow: hidden;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  z-index: 100;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  width: 700px;
+  height: 63px;
+  padding: 5px 10px;
+  border-bottom: 2px solid $gray;
+}
+
+.wrapName {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.nameTitle {
+  color: #222222;
+  font-size: 13px;
+}
+
+.onlineInfo {
+  color: #939393;
+  font-size: 12px;
+}
+.back {
+  display: flex;
+  align-items: center;
+  color: #818c99;
+  transition: all 0.2s ease-in;
+  &:hover {
+    background: linear-gradient(to righht, rgb(201, 199, 206), #eee);
+  }
+}
+.date {
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  color: #828282;
+  font-size: 12.5px;
+  margin: 20px 0 10px;
+}
+.userImg {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+.chatImg {
+  overflow-y: hidden;
+  flex: 1;
+  left: 0;
+  bottom: auto;
+  top: auto;
+  position: absolute;
+  border-radius: 50%;
+  height: 36px;
+  width: 36px;
+}
+
+.chat {
+  padding: 0 20px;
+  padding-top: 63px;
+  padding-bottom: 80px;
+  width: 700px;
+  margin-right: 0;
+  // overflow-y: hidden;
+}
+
+
+
+.message {
+  margin-top: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.msgWrap {
+  margin-left: 46px;
+  display: flex;
+  flex-direction: column;
+}
+
+.msgName {
+  font-weight: 700;
+  color: #2a5885;
+  font-size: 12.5px;
+}
+
+.msgText {
+  font-size: 13px;
+}
+
+.time {
+  margin-left: 3px;
+  font-weight: 400;
+  font-size: 12px;
+  color: #939393;
+}
+
+.footer {
+  bottom: 0;
+  position: fixed;
+  z-index: 100;
+  border-top: 2px solid $gray;
+  height: 75px;
+  width: 700px;
+  background-color: #fafbfc;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  // overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.icon {
+  font-size: 25px;
+  margin: 8px;
+  transition: color 0.2s ease-in;
+  &:hover {
+    color:$blue
+  }
+}
+
+.input {
+  border: 1px solid rgba(gray, 0.6);
+  padding: 9px 15px;
+  border-radius: 10px;
+  padding-right: 85px;
+}
+
+
+.attachField {
+  border: 1px solid $darkblue;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  animation: fade 0.2s;
+}
+.attachBlock {
+  right: -20px;
+  bottom: calc(100% - 10px);
+  z-index: 999999;
+  position: absolute;
+  display: none;
+}
+.attachFieldItem {
+  z-index: 99;
+  width: 100%;
+  font-size: 13px;
+  color: $darkblue;
+  background-color: #fff;
+  &:hover {
+    background-color: rgba($darkblue, 0.1);
+  }
+  &:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+  }
+  label {
+    width: 100%;
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+
+  }
+}
+
+.attachName {
+  color: black;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.wrapAttach {
+  position: relative;
+  &:hover {
+    & > .attachBlock {
+      display: block;
+    }
+  }
+}
+
+.miniIcon {
+  font-size: 16px;
+  margin-right: 4px;
+}

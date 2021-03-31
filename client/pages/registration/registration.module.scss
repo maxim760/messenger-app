@@ -1,0 +1,56 @@
+@import "../../styles/colors.scss";
+
+.registration {
+  width: 100%;
+  height: 100vh;
+  background-color: $gray; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 30px 20px 20px;
+  width: 390px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px 0 rgb(#000, 0.1);
+}
+
+.form {
+  width: 100%;
+}
+.input {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.info {
+  color: #666;
+  font-size: 13px;
+
+}
+
+.link {
+  margin-left: 3px;
+  border-bottom: 2px solid #666;
+  &:hover {
+    color: $blue;
+    border-bottom: 2px solid $blue;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+

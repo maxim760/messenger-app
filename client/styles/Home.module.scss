@@ -1,0 +1,82 @@
+@import "../styles/colors.scss";
+
+.main {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  margin-top: 20px;
+}
+
+.panel {
+  flex-basis: 250px;
+}
+
+.chat {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: -3px -3px 8px rgba(#000, 0.07), -3px 3px 8px rgba(#000, 0.07),
+    3px -3px 8px rgba(#000, 0.07), 3px 3px 8px rgba(#000, 0.07);
+}
+
+.iconMini {
+  color: #5181b8;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 9px;
+}
+.category {
+  margin-right: 10px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 14px;
+  padding: 5px;
+  cursor: pointer;
+    &:hover {
+      background-color: #e5e4ee;
+  }
+}
+
+.notify {
+  margin-left: auto;
+  font-size: 12px;
+  height: 18px;
+  width: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
+  font-weight: 600;
+  background-color: #bac1ca;
+}
+
+.imgMessage {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+
+.message {
+  padding: 8px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  height: 70px;
+  transition: 0.2s ease-in;
+  &:hover {
+    background-color: #f3f3f3;
+  }
+}
+
+.nameChat {
+  font-size: 18px;
+  font-weight: 700;
+}
+.msgText {
+  font-size: 14px;
+}
+.time {
+  font-size: 12px;
+  opacity: 0.8;
+}
