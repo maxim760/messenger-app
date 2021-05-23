@@ -39,16 +39,19 @@ export class AuthService {
 
       throw new HttpException("Не авторизован", 400)
     }
-    const { name, surname, _id, email } = user._doc;
-    const payload = { name, surname, email, _id };
-    response.cookie("Authentication", this.jwtService.sign(payload), {httpOnly: true})
+    const { password, ...data } = user._doc;
+    response.cookie("Authentication", this.jwtService.sign(data), {httpOnly: true})
+    return data
+}
+  async out(response: Response, user: any) {
+    await this.userService.setOfflineStatus(user._id)
+    response.clearCookie("Authentication")
     return "success"
   }
   async getProfile(user: any) {
     if (!user) {
-      throw new HttpException("Не авторизован", 400)
+      throw new HttpException("Не авторизован", 401)
     }
     return user;
   }
-
 }

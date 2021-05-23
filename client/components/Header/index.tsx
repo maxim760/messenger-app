@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../store/ducks/user/selectors';
 import { ROUTES } from '../../utils/routes';
 import { A } from '../A';
 import { Avatar } from '../Avatar';
@@ -8,8 +10,10 @@ import { Avatar } from '../Avatar';
 import styles from './Header.module.scss';
 
 export const Header: React.FC = () => {
+  const {surname, name, avatar, _id} = useSelector(selectUser)
   return (
-    <header className={styles.header}>
+    
+    <header className={clsx(styles.header, "fixed")}>
       <div className="container flex aic jcsb">
         <A href={ROUTES.MESSENGER} >
           <div className={clsx(styles.headerLogo, 'd-flex align-items-center cup')}>
@@ -17,11 +21,11 @@ export const Header: React.FC = () => {
             <h4>ChatApp</h4>
           </div>
         </A>
-        <A href="/profile/1">
+        <A href={`/profile/${_id}`}>
           <div className="d-flex align-items-center cup">
-            <b className="mr-5">Tomanov Max</b>
+            <b className="mr-5">{name} {surname}</b>
             <Avatar
-              src="https://sun9-65.userapi.com/s/v1/if2/tMf6TrjBv7zgUvEaPyn1JkQD_Zjg20j9-Oqao0pT4iatzNV-IWwE-uBsTETWPPi6U_bgEAgceOi2qjZYPsvK0dKP.jpg?size=200x0&quality=96&crop=704,0,1443,1443&ava=1"
+              src={avatar}
               width="50px"
               height="50px"
             />

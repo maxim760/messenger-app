@@ -1,6 +1,13 @@
 @import "./main.scss";
 @import "./colors.scss";
 
+.emoji-mart-preview {
+  display: none;
+}
+.emoji-mart-emoji {
+  outline: 0;
+}
+
 html,
 body {
   padding: 0;
@@ -26,7 +33,9 @@ h6 {
 }
 
 button {
+  outline: 0;
   border: none;
+  padding: 0;
   border-radius: 5px;
   cursor: pointer;
   background-color: transparent;
@@ -35,6 +44,7 @@ button {
 ul {
   list-style: none;
   padding: 0;
+
   margin: 0;
 }
 
@@ -64,21 +74,19 @@ input {
   outline: 0;
   padding: 3px;
   transition: all 0.18s ease-in;
-  &:focus {
-    color: #444;
-  }
+  color: #444;
 }
 .field {
-    border: none;
-    color: #adadad;
-    outline: 0;
-    border-bottom: 2px solid #adadad;
-    padding: 3px;
-    transition: all 0.18s ease-in;
-    &:focus {
-      color: #444;
-      border-bottom: 2px solid #444;
-    }
+  border: none;
+  color: #adadad;
+  outline: 0;
+  border-bottom: 2px solid #adadad;
+  padding: 3px;
+  transition: all 0.18s ease-in;
+  color: #444;
+  &:focus {
+    border-bottom: 2px solid #444;
+  }
 }
 .full {
   width: 100%;
@@ -108,13 +116,30 @@ a {
   box-sizing: border-box;
 }
 
+input[type="range"] {
+  padding: 0 !important;
+  outline: none;
+  height: 4px;
+  &::-webkit-slider-runnable-track {
+    padding: 0 !important;
+    cursor: pointer;
+  }
+}
+
+.fullscreen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .outline {
   background-color: transparent;
   border: 1px solid;
   transition: 0.2s ease-in;
   &:hover {
-  
-    background-color: darken(#fff, 8%)
+    background-color: darken(#fff, 8%);
   }
   &-blue {
     color: $blue;
@@ -135,19 +160,66 @@ a {
   &-blue {
     background-color: $blue;
     &:hover {
-      background-color: darken($blue, 10%)
+      background-color: darken($blue, 10%);
     }
   }
   &-red {
     background-color: $red;
-    background-color: darken($red, 10%)
+    background-color: darken($red, 10%);
   }
   &-green {
     background-color: $green;
-    background-color: darken($green, 10%)
+    background-color: darken($green, 10%);
   }
 }
 .fullwidth {
   display: flex;
   flex: 1;
+}
+
+.error {
+  font-size: 12px;
+  color: $red;
+}
+:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.round {
+  border-radius: 50%;
+}
+
+.loader {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 0.3rem solid rgba(#b1aa97, 0.3);
+  border-top-color: #b1aa97;
+  animation: 0.5s spin infinite linear;
+  &-small {
+    width: 1.2em;
+    height: 1.2em;
+    border-width: 0.2rem;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+// carousel
+.carousel-status {
+  // position: absolute;
+  top: 10px !important;
+  right: 10px !important;
+  padding: 5px !important;
+  font-size: 14px !important;
+  text-shadow: none !important; 
+  color: #666 !important;
 }

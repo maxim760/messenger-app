@@ -4,10 +4,12 @@ import { Message, MessageSchema } from './schemas/message.schema';
 import { MessageController } from './message.controller';
 import { MessageService } from './message.service';
 import { FileService} from "../file/file.service"
+import { Chat, ChatSchema } from 'src/chat/schemas/chat.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
+    MongooseModule.forFeature([{ name: Chat.name, schema: ChatSchema }]),
   ],
   controllers: [MessageController],
   providers: [MessageService, FileService],

@@ -18,7 +18,7 @@ export const FormBlock: React.FC<FormBlockProps> = ({text,title, children, onSub
         <h3 className={clsx(styles.subtitle, "mb-4", "mt-2")}>{ title}</h3>
         {children}
         <div className={styles.wrap}>
-          <div className={styles.bgbtn}></div>
+          <div className={styles.bgbtn} />
           <button className={styles.button}>{text}</button>
         </div>
       </form>

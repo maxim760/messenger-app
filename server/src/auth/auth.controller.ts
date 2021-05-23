@@ -12,8 +12,15 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Req() req, @Res({ passthrough: true }) response: Response) {
+  async login(@Req() req: Request, @Res({ passthrough: true }) response: Response) {
     return this.authService.login(req.user, response);
+
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("/out")
+  async out(@Res({ passthrough: true }) response: Response, @Req() req: Request) {
+    return this.authService.out(response, req.user)
   }
 
   @UseGuards(JwtAuthGuard)

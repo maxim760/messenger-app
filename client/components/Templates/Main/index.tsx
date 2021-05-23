@@ -1,33 +1,45 @@
 import React from "react";
 import Head from "next/head";
+import styles from "./main.module.scss";
 type MainTemplateProps = {
-  title ?: string,
-  children: React.ReactNode
-  keywords ?: string
-  className?: string
+  title?: string;
+  children: React.ReactNode;
+  keywords?: string;
+  className?: string;
   showHeader?: boolean;
-  withoutOffset ?: boolean
-}
+  withoutOffset?: boolean;
+  showToolTip ?: boolean
+};
 
-import clsx from "clsx"
+import clsx from "clsx";
 import { Header } from "../../Header";
+import { selectCountNotifies } from "../../../store/ducks/notify/selectors";
+import { useSelector } from "react-redux";
+import { AppHead } from "./AppHead";
+import { AppToolTip } from "../../AppToolTip";
 
-export const MainTemplate: React.FC<MainTemplateProps> = ({ title = "Главная", children, keywords = "", className = "" , showHeader=false, withoutOffset=false}) => {
+export const MainTemplate: React.FC<MainTemplateProps> = ({
+  title = "Главная",
+  children,
+  keywords = "",
+  className = "",
+  showHeader = false,
+  withoutOffset = false,
+  showToolTip = true
+}) => {
   return (
     <>
-      <Head>
-        <title>{title}</title>
-        <meta
-          name="keywords"
-          content={`чат,мессенджер${keywords && "," + keywords}`}
-        />
-        <meta
-          name="description"
-          content="Описание, Это приложение на основе next js, Работает быстро, оптимизировано, также кроссплатформенность и кроссбраузерность поддерживаются, с информацией о пользователях"
-        />
-      </Head>
+      <AppHead title={title} keywords={keywords} />
       {showHeader && <Header />}
-      <main style={showHeader ? withoutOffset ? {paddingTop: 55} : {paddingTop: 63} : {}} className={clsx("main", className)}>{children}</main>
+      <main
+        className={clsx(className, {
+          [styles.main]: showHeader,
+          [styles.mainOffset]: showHeader && withoutOffset,
+        })}
+      >
+        {children}
+        {showToolTip && <AppToolTip />}
+      </main>
     </>
   );
 };

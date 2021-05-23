@@ -1,0 +1,1 @@
+export {getAudioFromBlob} from "./getAudioFromBlob"

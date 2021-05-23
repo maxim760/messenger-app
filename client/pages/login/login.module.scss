@@ -14,8 +14,26 @@
   text-align: center;
 }
 
+.inputWrap {
+  position: relative;
+}
 .input {
   width: 100%;
+  border-bottom: 2px solid rgba(#000, 0.3);
+  transition: border-bottom 0.2s ease-in;
+  &:focus {
+    border-bottom: 2px solid rgba(#000, 0.8);
+    
+  }
+}
+
+.passwordBtn {
+  position: absolute;
+  right: 0%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.label {
   margin-bottom: 18px;
 }
 .wrap {

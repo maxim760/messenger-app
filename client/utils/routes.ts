@@ -5,5 +5,5 @@ export enum ROUTES {
   FRIENDS="/friends",
   SEARCH = "/search",
   PROFILE = "/profile",
-  CHAT = "/chat?sel="
+  CHAT = "/chat?id="
 }

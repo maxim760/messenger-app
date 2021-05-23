@@ -1,13 +1,26 @@
+@import "../../styles/colors.scss"; 
+
 .followButton {
+  place-content: center;
   min-width: 100px;
-  height: 40px;
   font-size: 16px;
-  padding: 5px;
+  padding: 10px 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   font-weight: 700;
+  outline: 0
+}
+
+.onlineDate {
+  margin-left: auto;
+  font-size: 13px;
+  color: #939393;
+  margin-top: 3px;
+
 }
 
 .avatar { 
-  border-radius: 56% 58% 57% 53% / 76% 74% 79% 81%    ;
+  border-radius: 50%   ;
 }
 
 .username {
@@ -17,4 +30,14 @@
 .about {
   font-size: 22px;
   line-height: 30px;
+}
+.link {
+  font-size: 20px;
+  color: $blue;
+  transition: transform 0.2s ease-in;
+  padding-bottom: 3px;
+  &:hover {
+    border-bottom: 1px solid $blue ;
+
+  }
 }

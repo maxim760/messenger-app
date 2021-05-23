@@ -35,12 +35,17 @@
   font-weight: 700;
   font-size: 13px;
   color: $darkblue;
-  margin-bottom: 5px;
   &:hover {
     padding-bottom: 0;
     border-bottom: 1px solid $darkblue;
   }
 }
+
+.status {
+  padding:  0 2px ;
+  font-size: 14px;
+}
+
 .message {
   font-size: 13px;
   color: $darkblue;
@@ -57,8 +62,8 @@
 }
 .img {
   margin-right: 20px;
-  height: 80px;
-  height: 80px;
+  height: 65px;
+  width: 65px;
   border-radius: 50%;
   position: relative;
 }
@@ -119,12 +124,11 @@
 
 
 .infoItem {
+  outline: 0;
   z-index: 99;
 
   cursor: pointer;
-  padding: 10px;
   font-size: 13px;
-  color: $darkblue;
   background-color: #fff;
   &:hover {
     background-color: rgba($darkblue, 0.1);
@@ -132,6 +136,13 @@
   &:not(:last-child) {
     border-bottom: 1px solid #ccc;
   }
+}
+
+.infoItemBtn {
+  outline: 0;
+  color: $darkblue;
+
+padding: 10px;
 }
 
 .more {
@@ -142,9 +153,19 @@
 }
 
 .wrap {
+  margin-left: auto;
   &:hover {
     & > .info {
       display: block;
     }
   }
+}
+
+
+.button {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  padding: 3px 6px ;
+  border-radius: 5px;
 }

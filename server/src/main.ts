@@ -8,12 +8,15 @@ const PORT = 5000;
 
 async function bootstrap() {
   const app = await NestFactory.create(
-    AppModule,
+    AppModule
   );
-  app.enableCors();
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(PORT, '0.0.0.0', () => {
+  app.enableCors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+  await app.listen(PORT, () => {
     console.log('serve starten on', PORT);
   });
 }

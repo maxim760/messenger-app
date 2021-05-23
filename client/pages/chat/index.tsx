@@ -1,344 +1,193 @@
-import clsx from "clsx";
-import React, { useLayoutEffect } from "react";
-import { A } from "../../components/A";
-import { AppBack } from "../../components/AppBack";
-import { ChatTemplate } from "../../components/Templates/Chat";
-import { ROUTES } from "../../utils/routes";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import styles from "./chat.module.scss";
+import { apiChat } from "../../services/api/apiChat";
+import { GetServerSideProps } from "next";
+import { IChat, IMessage } from "../../store/ducks/chates/types";
+import { IWithTimeStamps, NextReq } from "../../types";
+import { ChatTemplate, AppBack, A, Avatar } from "../../components";
+import { addFormattedMessage, checkAuth, getAuthorization, getFormattedMessages, getLastOnline } from "../../utils";
+import { Sockets } from "../../utils/consts";
+import { ROUTES } from "../../utils/routes";
+import { MessageList } from "../../components/Chat/MessageList";
+import { selectSocket } from "../../store/ducks/socket/selectors";
+import { useActiveChat } from "../../hooks/useActiveChat";
+import { MessageForm } from "../../components/Chat/MessageForm";
+import {
+  usePhotosAdd,
+  usePhotosMessage,
+} from "../../components/Chat/hooks/usePhotos";
+import { PhotosSliderModal } from "../../components/PhotosSliderModal";
+import { IFormatMsgObject } from "../../utils/messages/getFormattedMessages";
 
-import { ImAttachment as IconAttach } from "react-icons/im";
-import { FiCamera as IconCamera } from "react-icons/fi";
-import { BiMicrophone as IconMicro } from "react-icons/bi";
-import { VscSmiley as IconSmile } from "react-icons/vsc";
-import { BiSend as IconSend } from "react-icons/bi";
-import { HiOutlinePlay as IconVideo } from "react-icons/hi";
-import { HiOutlineMusicNote as IconMusic } from "react-icons/hi";
-import { BsFileEarmark as IconFile } from "react-icons/bs";
+type ChatPageProps = {
+  chat: IChat;
+};
 
-import { useChange } from "../../hooks/useChange";
-import { ACCEPTS } from "../../utils/accepts";
+export const maxHeight = 162; // 40 + 22 * 6
+export const heightLine = 22;
+export const heightFirstLine = 38;
 
-const ChatPage: React.FC = ({}): React.ReactElement => {
-  useLayoutEffect(() => {
-    document.documentElement.scrollTop = document.documentElement.scrollHeight;
+type IMessageObj = {
+  messages: IFormatMsgObject;
+  count: number;
+  photosLength: number;
+};
+
+const defaultMessagesObj: IMessageObj = {
+  count: 0,
+  photosLength: 0,
+  messages: {},
+};
+
+const ChatPage: React.FC<ChatPageProps> = ({ chat }): React.ReactElement => {
+  const socket = useSelector(selectSocket);
+  const [messagesObject, setMessagesObject] = useState<IMessageObj>(defaultMessagesObj);
+  const { state: photoAddState, actions: photoAddActions } = usePhotosAdd();
+  const { state: photoMsgState, actions: photoMsgActions } = usePhotosMessage();
+  useEffect(() => {
+    const {
+      photos: photosFromMsg,
+      count,
+      messages,
+      photosLength,
+    } = getFormattedMessages(chat.messages);
+    photoMsgActions.addPhotos(photosFromMsg);
+    setMessagesObject({ count, messages, photosLength });
   }, []);
-  const { input: message, reset } = useChange();
+  useActiveChat(chat._id);
+  const [textareaHeight, setTextAreaHeight] = useState(heightFirstLine);
+  const [footerHeight, setFooterHeight] = useState(null);
+  const pushMessage = (msg: IWithTimeStamps<IMessage>) => {
+    const photos = msg.image;
+    if (photos) {
+      photoMsgActions.addPhotos(photos);
+    }
+    setMessagesObject((prev) => ({
+      messages: addFormattedMessage(prev.messages, msg, {
+        photosLength: prev.photosLength,
+      }),
+      count: prev.count + 1,
+      photosLength: prev.photosLength + (msg.image?.length || 0),
+    }));
+  };
+  useEffect(() => {
+    const onGetMessage = (message: IWithTimeStamps<IMessage>) => {
+      pushMessage(message);
+    };
+    socket.on(Sockets.get.message, onGetMessage);
+    () => {
+      socket.off(Sockets.get.message, onGetMessage);
+      photoMsgActions.clearPhotos();
+      photoAddActions.clearPhotos();
+    };
+  }, []);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current &&
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messagesObject.count]);
+  useEffect(() => {
+    bottomRef.current && bottomRef.current.scrollIntoView();
+  }, [footerHeight, textareaHeight]);
   return (
     <ChatTemplate title="Мессенджер" className={styles.page} withoutOffset>
       <div className={styles.wrap}>
         <div className={styles.header}>
           <AppBack className={styles.back} />
           <div className={styles.wrapName}>
-            <span className={styles.nameTitle}>Адель Ххххххх</span>
-            <span className={styles.onlineInfo}>
-              был в сети 51 минуту назад
+            <span className={styles.nameTitle}>
+              {chat.isDialog
+                ? chat.users[0].name + " " + chat.users[0].surname
+                : chat.name}
             </span>
-          </div>
-          <A href={ROUTES.PROFILE + "/" + 22}>
-            <img
-              className={styles.userImg}
-              src="https://sun9-58.userapi.com/s/v1/if2/YB9s9g6faW3y5gniuXZ-mF-ioCiR-2R61JMAsbiRT1tV09Opp2rnkZ5RP6fBP0jadSsTEdfzp_0n8BuDhE-JxnoI.jpg?size=50x0&quality=96&crop=297,384,1536,1536&rotate=90&ava=1"
-              alt="Фото"
-            />
-          </A>
-        </div>
-        <div className={styles.chat}>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-58.userapi.com/s/v1/if2/YB9s9g6faW3y5gniuXZ-mF-ioCiR-2R61JMAsbiRT1tV09Opp2rnkZ5RP6fBP0jadSsTEdfzp_0n8BuDhE-JxnoI.jpg?size=50x0&quality=96&crop=297,384,1536,1536&rotate=90&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Адель</span>
-                <span className={styles.time}>20:27</span>
-              </div>
-              <span className={styles.msgText}>Чет затупил, спасибо</span>
-            </div>
-          </div>
-          <p className={styles.date}>28 марта</p>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-58.userapi.com/s/v1/if2/YB9s9g6faW3y5gniuXZ-mF-ioCiR-2R61JMAsbiRT1tV09Opp2rnkZ5RP6fBP0jadSsTEdfzp_0n8BuDhE-JxnoI.jpg?size=50x0&quality=96&crop=297,384,1536,1536&rotate=90&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Адель</span>
-                <span className={styles.time}>14:15</span>
-              </div>
-              <span className={styles.msgText}>
-                привет, делал 4_1_1 в авроре?
+            {chat.isDialog && (
+              <span className={styles.onlineInfo}>
+                {getLastOnline(chat.users[0])}
               </span>
-            </div>
+            )}
           </div>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-65.userapi.com/s/v1/if2/4tbrT3w4Xckj3K-3mxvWIF8OHqw_lYk9b5k1dT0d6w-dJFEzVTT6b0fUW18LCvy31mKyxRnM-vI41J_Z-CvG_ZLE.jpg?size=50x0&quality=96&crop=704,0,1439,1439&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Максим</span>
-                <span className={styles.time}>14:48</span>
-              </div>
-              <span className={styles.msgText}>
-                Привет, нет, этот номер завтра объяснять будут
-              </span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-58.userapi.com/s/v1/if2/YB9s9g6faW3y5gniuXZ-mF-ioCiR-2R61JMAsbiRT1tV09Opp2rnkZ5RP6fBP0jadSsTEdfzp_0n8BuDhE-JxnoI.jpg?size=50x0&quality=96&crop=297,384,1536,1536&rotate=90&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Адель</span>
-                <span className={styles.time}>15:11</span>
-              </div>
-              <span className={styles.msgText}>ого ну ладно</span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <div className={styles.msgWrap}>
-              <span className={styles.msgText}>
-                ты по мат логике как-нибудь тренируешься на задачках?
-              </span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-65.userapi.com/s/v1/if2/4tbrT3w4Xckj3K-3mxvWIF8OHqw_lYk9b5k1dT0d6w-dJFEzVTT6b0fUW18LCvy31mKyxRnM-vI41J_Z-CvG_ZLE.jpg?size=50x0&quality=96&crop=704,0,1439,1439&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Максим</span>
-                <span className={styles.time}>15:15</span>
-              </div>
-              <span className={styles.msgText}>
-                Я лекции смотрю, там в последние 20-30 минут пример где-то
-                разбирается, я разбираюсь в нем
-              </span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-58.userapi.com/s/v1/if2/YB9s9g6faW3y5gniuXZ-mF-ioCiR-2R61JMAsbiRT1tV09Opp2rnkZ5RP6fBP0jadSsTEdfzp_0n8BuDhE-JxnoI.jpg?size=50x0&quality=96&crop=297,384,1536,1536&rotate=90&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Адель</span>
-                <span className={styles.time}>15:18</span>
-              </div>
-              <span className={styles.msgText}>пон</span>
-            </div>
-          </div>
-          <p className={styles.date}>Вчера</p>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-65.userapi.com/s/v1/if2/4tbrT3w4Xckj3K-3mxvWIF8OHqw_lYk9b5k1dT0d6w-dJFEzVTT6b0fUW18LCvy31mKyxRnM-vI41J_Z-CvG_ZLE.jpg?size=50x0&quality=96&crop=704,0,1439,1439&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Максим</span>
-                <span className={styles.time}>20:01</span>
-              </div>
-              <span className={styles.msgText}>
-                Адель, привет А по ооп, когда в классе apllication , создаём
-                child, родителем может быть только то что хранится в свойствах
-                temp_parent и temp_child, или любой обьект который до этого
-                создан
-              </span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-58.userapi.com/s/v1/if2/YB9s9g6faW3y5gniuXZ-mF-ioCiR-2R61JMAsbiRT1tV09Opp2rnkZ5RP6fBP0jadSsTEdfzp_0n8BuDhE-JxnoI.jpg?size=50x0&quality=96&crop=297,384,1536,1536&rotate=90&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Адель</span>
-                <span className={styles.time}>20:27</span>
-              </div>
-              <span className={styles.msgText}>Чет затупил, спасибо</span>
-            </div>
-          </div>
-          <p className={styles.date}>28 марта</p>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-58.userapi.com/s/v1/if2/YB9s9g6faW3y5gniuXZ-mF-ioCiR-2R61JMAsbiRT1tV09Opp2rnkZ5RP6fBP0jadSsTEdfzp_0n8BuDhE-JxnoI.jpg?size=50x0&quality=96&crop=297,384,1536,1536&rotate=90&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Адель</span>
-                <span className={styles.time}>14:15</span>
-              </div>
-              <span className={styles.msgText}>
-                привет, делал 4_1_1 в авроре?
-              </span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-65.userapi.com/s/v1/if2/4tbrT3w4Xckj3K-3mxvWIF8OHqw_lYk9b5k1dT0d6w-dJFEzVTT6b0fUW18LCvy31mKyxRnM-vI41J_Z-CvG_ZLE.jpg?size=50x0&quality=96&crop=704,0,1439,1439&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Максим</span>
-                <span className={styles.time}>14:48</span>
-              </div>
-              <span className={styles.msgText}>
-                Привет, нет, этот номер завтра объяснять будут
-              </span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-58.userapi.com/s/v1/if2/YB9s9g6faW3y5gniuXZ-mF-ioCiR-2R61JMAsbiRT1tV09Opp2rnkZ5RP6fBP0jadSsTEdfzp_0n8BuDhE-JxnoI.jpg?size=50x0&quality=96&crop=297,384,1536,1536&rotate=90&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Адель</span>
-                <span className={styles.time}>15:11</span>
-              </div>
-              <span className={styles.msgText}>ого ну ладно</span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <div className={styles.msgWrap}>
-              <span className={styles.msgText}>
-                ты по мат логике как-нибудь тренируешься на задачках?
-              </span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-65.userapi.com/s/v1/if2/4tbrT3w4Xckj3K-3mxvWIF8OHqw_lYk9b5k1dT0d6w-dJFEzVTT6b0fUW18LCvy31mKyxRnM-vI41J_Z-CvG_ZLE.jpg?size=50x0&quality=96&crop=704,0,1439,1439&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Максим</span>
-                <span className={styles.time}>15:15</span>
-              </div>
-              <span className={styles.msgText}>
-                Я лекции смотрю, там в последние 20-30 минут пример где-то
-                разбирается, я разбираюсь в нем
-              </span>
-            </div>
-          </div>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-58.userapi.com/s/v1/if2/YB9s9g6faW3y5gniuXZ-mF-ioCiR-2R61JMAsbiRT1tV09Opp2rnkZ5RP6fBP0jadSsTEdfzp_0n8BuDhE-JxnoI.jpg?size=50x0&quality=96&crop=297,384,1536,1536&rotate=90&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Адель</span>
-                <span className={styles.time}>15:18</span>
-              </div>
-              <span className={styles.msgText}>пон</span>
-            </div>
-          </div>
-          <p className={styles.date}>Вчера</p>
-          <div className={styles.message}>
-            <img
-              className={styles.chatImg}
-              src="https://sun9-65.userapi.com/s/v1/if2/4tbrT3w4Xckj3K-3mxvWIF8OHqw_lYk9b5k1dT0d6w-dJFEzVTT6b0fUW18LCvy31mKyxRnM-vI41J_Z-CvG_ZLE.jpg?size=50x0&quality=96&crop=704,0,1439,1439&ava=1"
-              alt="Фото"
-            />
-            <div className={styles.msgWrap}>
-              <div className="d-ib">
-                <span className={styles.msgName}>Максим</span>
-                <span className={styles.time}>20:01</span>
-              </div>
-              <span className={styles.msgText}>
-                Адель, привет А по ооп, когда в классе apllication , создаём
-                child, родителем может быть только то что хранится в свойствах
-                temp_parent и temp_child, или любой обьект который до этого
-                создан
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className={styles.footer}>
-          <div className={styles.wrapAttach}>
-            <IconAttach className={clsx("icon", styles.icon)} />
-            <div className={clsx(styles.attachBlock, "pb-5")}>
-              <ul className={styles.attachField}>
-                <li className={styles.attachFieldItem}>
-                  <label>
-                    <input accept={ACCEPTS.IMAGE} type="file" hidden />
-                    <IconCamera className={styles.miniIcon} />
-                    <span className={styles.attachName}>Фотография</span>
-                  </label>
-                </li>
-                <li className={styles.attachFieldItem}>
-                  <label>
-                    <input accept={ACCEPTS.VIDEO} type="file" hidden />
-                    <IconVideo className={styles.miniIcon} />
-                    <span className={styles.attachName}>Видеозапись</span>
-                  </label>
-                </li>
-                <li className={styles.attachFieldItem}>
-                  <label>
-                    <input accept={ACCEPTS.AUDIO} type="file" hidden />
-                    <IconMusic className={styles.miniIcon} />
-                    <span className={styles.attachName}>Аудиозапись</span>
-                  </label>
-                </li>
-                <li className={styles.attachFieldItem}>
-                  <label>
-                    <input type="file" hidden />
-                    <IconFile className={styles.miniIcon} />
-                    <span className={styles.attachName}>Файл</span>
-                  </label>
-                </li>
-              </ul>
-              </div>
-          </div>
-          <div className={clsx("relative w100")}>
-            <input
-              {...message}
-              type="text"
-              placeholder="Написать сообщение"
-              className={clsx("w100", styles.input)}
-            />
-            <div className={clsx("absolute aic flex t-0 b-0 r-0 h100")}>
-              <IconCamera className={clsx("icon", styles.icon)} />
-              <IconSmile className={clsx("icon", styles.icon)} />
-            </div>
-          </div>
-          {message.value ? (
-            <IconSend className={clsx("icon", styles.icon)} />
+          {chat.isDialog ? (
+            <A href={ROUTES.PROFILE + "/" + chat.users[0]._id}>
+              <Avatar
+                className={styles.userImg}
+                src={chat.users[0].avatar}
+                alt="Фото"
+              />
+            </A>
           ) : (
-            <IconMicro className={clsx("icon", styles.icon)} />
+            <Avatar className={styles.userImg} src={chat.avatar} alt="Фото" />
           )}
         </div>
+        <MessageList
+          chatId={chat._id}
+          messages={messagesObject.messages}
+          textareaHeight={textareaHeight}
+          footerHeight={footerHeight}
+        />
+        <MessageForm
+          messageRef={messageRef}
+          pushMessage={pushMessage}
+          chat={chat}
+          textareaHeight={textareaHeight}
+          setFooterHeight={setFooterHeight}
+          setTextAreaHeight={setTextAreaHeight}
+          footerRef={footerRef}
+        />
       </div>
+      {photoAddState.photos.length > 0 && photoAddState.startIdx !== null ? (
+        <PhotosSliderModal
+          startPhotoIdx={photoAddState.startIdx}
+          closePhotosModal={photoAddActions.closeModal}
+          photos={photoAddState.photos}
+        />
+      ) : photoMsgState.photos.length > 0 && photoMsgState.startIdx !== null ? (
+        <PhotosSliderModal
+          startPhotoIdx={photoMsgState.startIdx}
+          closePhotosModal={photoMsgActions.closeModal}
+          photos={photoMsgState.photos}
+        />
+      ) : null}
+      <div ref={bottomRef} />
     </ChatTemplate>
   );
 };
-
 export default ChatPage;
+
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  try {
+    const isAuth = await checkAuth(req as NextReq);
+    if (!isAuth) {
+      return {
+        props: {},
+        redirect: {
+          destination: ROUTES.LOGIN,
+          permanent: false,
+        },
+      };
+    }
+    const { id } = query;
+    const chat = await apiChat.get({
+      payload: { chat: id as string },
+      authorization: getAuthorization(req),
+    });
+    return {
+      props: { chat },
+    };
+  } catch (error) {
+    console.log(error.message, "ERROR");
+    return {
+      props: {},
+      redirect: {
+        destination: ROUTES.MESSENGER,
+        permanent: false,
+      },
+    };
+  }
+};

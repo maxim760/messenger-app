@@ -8,6 +8,21 @@
   align-items: center;
   justify-content: center;
 }
+.avatarLabel {
+  font-size: 13px;
+  color: #757575;
+  font-weight: 500;
+}
+.inputWrap {
+  position: relative;
+}
+
+.passwordBtn {
+  position: absolute;
+  right: 0%;
+  top: 50%;
+  transform: translateY(-50%);
+}
 
 .card {
   display: flex;
@@ -26,9 +41,16 @@
 }
 .input {
   width: 100%;
-  margin-bottom: 18px;
+  border-bottom: 2px solid rgba(#000, 0.3);
+  transition: border-bottom 0.2s ease-in;
+  &:focus {
+    border-bottom: 2px solid rgba(#000, 0.8);
+  }
 }
+.label {
+  margin-bottom: 18px;
 
+}
 .info {
   color: #666;
   font-size: 13px;

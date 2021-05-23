@@ -8,6 +8,7 @@ export type MulterFile = Express.Multer.File
 
 export enum IFile {
   AUDIO = 'audio',
+  VOICE = 'voice',
   PICTURE = 'picture',
 }
 
@@ -15,7 +16,7 @@ export enum IFile {
 export class FileService {
   createFile(type: IFile, file: Express.Multer.File): string {
     try {
-      const fileExt = file.originalname.split('.').pop();
+      const fileExt = type !== IFile.VOICE ? file.originalname.split('.').pop(): "ogg";
       const fileName = nanoid() + '.' + fileExt;
       const filePath = path.resolve(__dirname, '..', 'static', type);
       if (!fs.existsSync(filePath)) {

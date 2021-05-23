@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { isValidObjectId, Model, ObjectId, Types } from 'mongoose';
 import { nanoid } from 'nanoid';
 import { UserSchema, User, UserDocument } from '../user/schemas/user.schema';
 import * as bcrypt from 'bcrypt';
@@ -37,10 +37,29 @@ export class FriendsService {
   
   async getAll(id: string) {
     try {
+      if (!isValidObjectId(id)) {
+        throw new BadRequestException("Некорректный id")
+      }
       const users = await this.userModel.findById(id).select("friends").populate("friends");
       return users
 
     } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+  async getTotalFriends({id, userId}: {id?:string, userId: string}) {
+    try {
+      const idForFind = isValidObjectId(id) ? id : userId
+  
+      const users = await this.userModel
+        .findById(idForFind)
+        .populate({path: "friends", select: "-password"})
+        .populate({path: "sendRequests", select: "-password"})
+        .populate({path: "incomingRequests", select: "-password"})
+        .select("friends incomingRequests sendRequests")
+        return users
+    } catch (error) {
+      
       throw new HttpException(error.message, 500);
     }
   }
@@ -58,13 +77,13 @@ export class FriendsService {
       }
       thisUser.friends.push(id as unknown as User)
       thisUser.incomingRequests.splice(candidateIdx, 1)
-      await thisUser.save()
-      const newFriend = await this.userModel.findById(requests[candidateIdx])
-      newFriend.friends.push(user._id)
+      await thisUser.save();
+      const newFriend = await this.userModel.findById(id)
       const sendIdx = newFriend.sendRequests.findIndex(req => req.toString() === user._id)
       if (sendIdx === -1) {
         throw new BadRequestException("Пользователь не найден")
       }
+      newFriend.friends.push(user._id)
       newFriend.sendRequests.splice(sendIdx, 1)
       await newFriend.save()
       return "success"
@@ -90,7 +109,7 @@ async deleteFriend(id: string, user: any) {
     thisUser.incomingRequests.push(thisUser.friends[deleteIdx])
     thisUser.friends.splice(deleteIdx, 1)
     deletedFriend.sendRequests.push(user._id)
-    deletedFriend.friends.splice(deletedFriend.friends.findIndex(fr => fr.toString() === user._id), 1)
+    deletedFriend.friends.splice(deletedUserIdx, 1)
     await thisUser.save()
     await deletedFriend.save()
     return "success"
@@ -100,7 +119,7 @@ async deleteFriend(id: string, user: any) {
 }
 async getAllSend(id: string) {
   try {
-    return await this.userModel.findById(id).select("sendRequests").populate("sendRequests");
+    return await this.userModel.findById(id).select("sendRequests").populate({path: "sendRequests", select: "-password"});
   } catch (error) {
     throw new HttpException(error.message, 500)
   }
@@ -113,11 +132,11 @@ async addSendRequest(id: string, user: any) {
     const thisUser = await this.userModel.findById(user._id)
     const findUser = await this.userModel.findById(id)
     if (!findUser) {
-      throw new HttpException("Пользователь не найдкн", HttpStatus.BAD_REQUEST)
+      throw new HttpException("Пользователь не найден", HttpStatus.BAD_REQUEST)
     }
-    thisUser.incomingRequests.push(findUser._id)
+    thisUser.sendRequests.push(findUser._id)
     await thisUser.save()
-    findUser.sendRequests.push(thisUser._id)
+    findUser.incomingRequests.push(thisUser._id)
     await findUser.save()
     return "success"
     
@@ -137,7 +156,7 @@ async deleteSendRequest(id: string, mode: string, user: any) {
       users.forEach(async (delUser) => {
         const idxDel = delUser.incomingRequests.findIndex(req => req.toString() === user._id)
         if (idxDel !== -1) {
-          delUser.incomingRequests.splice(delUser.incomingRequests.findIndex(req => req.toString() === user._id), 1);
+          delUser.incomingRequests.splice(idxDel, 1);
           await delUser.save();
         }
       })
@@ -145,10 +164,11 @@ async deleteSendRequest(id: string, mode: string, user: any) {
       await thisUser.save()
       return "success"
     }
+
     const idx = thisUser.sendRequests.findIndex(req => req.toString() === id)
     const delUser = await this.userModel.findById(id)
-    const idxDel = delUser.sendRequests.findIndex(req => req.toString() === id)
-    if (idx === -1 || idxDel === -1 ) {
+    const idxDel = delUser.incomingRequests.findIndex(req => req.toString() === user._id)
+    if (idx === -1 || idxDel === -1) {
       throw new BadRequestException("Пользователь не найден")
     }
     thisUser.sendRequests.splice(idx, 1);
@@ -163,7 +183,7 @@ async deleteSendRequest(id: string, mode: string, user: any) {
 }
 async getIncomingRequest(id: string) {
   try {
-    return await this.userModel.findById(id).select("incomingRequests").populate("incomingRequests");
+    return await this.userModel.findById(id).select("incomingRequests").populate({path: "incomingRequests", select: "-password"});
   } catch (error) {
     throw new HttpException(error.message, 500)
   }

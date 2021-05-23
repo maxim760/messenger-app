@@ -1,0 +1,5 @@
+export { getDay } from "./getDay"
+export { getHoursMins } from "./getHoursMins"
+export { getIntDate } from "./getIntDate"
+export { getLastOnline } from "./getLastOnline"
+export { getMinsSec } from "./getMinsSec"

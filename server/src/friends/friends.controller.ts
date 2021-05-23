@@ -1,24 +1,35 @@
-import { Controller, Get, Post, UseGuards, Request, Query, Delete } from "@nestjs/common";
+import { Controller, Get, Post, UseGuards, Req, Query, Delete } from "@nestjs/common";
+import { Request } from "express";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { FriendsService } from "./friends.service";
 
 @Controller("/friends")
 export class FriendsController {
   constructor(private readonly friendsService: FriendsService) { }
-  @UseGuards(JwtAuthGuard)
+
+  //@UseGuards(JwtAuthGuard)
   @Get()
-  getAll(@Query("id") id: string) {
+  getAll(@Req() req,@Query("id") id: string) {
     return this.friendsService.getAll(id)
   }
 
+
+  @UseGuards(JwtAuthGuard)
+  @Get("/full")
+  getTotalFriends(@Req() req, @Query("id") id?: string) {
+    return this.friendsService.getTotalFriends({id,userId: (req.user as any)._id})
+  }
+
+
+
   @UseGuards(JwtAuthGuard)
   @Post()
-  addFriend(@Query("id") id: string, @Request() req) {
+  addFriend(@Query("id") id: string, @Req() req) {
     return this.friendsService.addFriend(id, req.user)
   }
   @UseGuards(JwtAuthGuard)
   @Delete()
-  deleteFriend(@Query("id") id: string,@Request() req) {
+  deleteFriend(@Query("id") id: string,@Req() req) {
     return this.friendsService.deleteFriend(id, req.user)
   }
 
@@ -30,13 +41,12 @@ export class FriendsController {
 
   @UseGuards(JwtAuthGuard)
   @Post("/send")
-  addSendRequest(@Query("id") id: string,@Request() req) {
+  addSendRequest(@Query("id") id: string,@Req() req) {
     return this.friendsService.addSendRequest(id, req.user)
   }
-
   @UseGuards(JwtAuthGuard)
   @Delete("/send")
-  deleteSendRequest(@Query("id") id : string, @Query("mode") mode : string = "one",@Request() req) {
+  deleteSendRequest(@Query("id") id : string, @Query("mode") mode : string = "one",@Req() req) {
     return this.friendsService.deleteSendRequest(id, mode, req.user)
   }
 

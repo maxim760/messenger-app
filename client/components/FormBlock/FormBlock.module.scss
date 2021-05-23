@@ -57,6 +57,11 @@
       left: 0
     }
   }
+  &:active {
+    .bgbtn {
+      left: -50%
+    }
+  }
 }
 
 .bgbtn {
@@ -71,6 +76,7 @@
   transition: all 0.4s;
 }
 .button {
+  outline: 0;
   font-size: 15px;
   color: #fff;
   line-height: 1.2;

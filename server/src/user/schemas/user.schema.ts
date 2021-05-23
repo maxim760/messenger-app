@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, ObjectId, Schema as mongooseSchema } from 'mongoose';
-import { Chat } from 'src/chat/schemas/chat.schema';
+import { Chat, ChatDocument } from 'src/chat/schemas/chat.schema';
 
-export type UserDocument = User & Document;
+export type UserDocument = User & Document & {_id: string};
 
 
 @Schema({timestamps: true})
@@ -15,7 +15,7 @@ export class User {
   surname: string;
   @Prop()
   avatar: string;
-  @Prop()
+  @Prop({default: "Нет статуса"})
   status: string;
 
   @Prop({ type: [{ type: mongooseSchema.Types.ObjectId, ref: 'User' }] })
@@ -26,10 +26,16 @@ export class User {
   incomingRequests: User[]
   
   @Prop({ type: [{ type: mongooseSchema.Types.ObjectId, ref: 'Chat' }] })
-  chates: Chat[]
+  chates: ChatDocument[]
 
   @Prop()
   password: string;
+
+  @Prop({default: false})
+  isOnline: boolean;
+  @Prop({default: 0})
+  lastOnlineTime: number;
+
 
 }
 

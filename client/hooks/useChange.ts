@@ -1,10 +1,9 @@
 import { useState } from "react"
 
-export const useChange = (initial = "", callback?: Function) => {
+export const useChange = (initial = "") => {
   const [value, setValue] = useState(initial)
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setValue(e.target.value)
-    callback && callback(e.target.value)
   }
   const reset = () => setValue("")
   return {
@@ -12,6 +11,7 @@ export const useChange = (initial = "", callback?: Function) => {
       value,
       onChange
     },
-    reset 
+    reset,
+    setValue
   }
 }

@@ -8,6 +8,7 @@ import { MainTemplate } from "../Main";
 import { useRouter } from "next/router";
 import { ROUTES } from "../../../utils/routes";
 import { A } from "../../A";
+import { Panel } from "./Panel";
 
 type ChatProps = {
   title: string;
@@ -21,31 +22,11 @@ export const ChatTemplate: React.FC<ChatProps> = ({ title, children, className, 
     <MainTemplate
       title={title}
       showHeader
-      withoutOffset
-      className={clsx(styles.app, "container")}
+      withoutOffset={withoutOffset}
+      className={clsx(styles.app, "container", )}
+      showToolTip={false}
     >
-      <aside className={styles.panel}>
-        <ul>
-          <li>
-            <A className={clsx("flex aic", styles.category)} href={ROUTES.SEARCH}>
-              <SearchIcon className={styles.iconMini} />
-              Поиск пользователей<span className={styles.notify}>1</span>
-            </A>
-          </li>
-          <li>
-            <A className={clsx("flex aic", styles.category)} href={ROUTES.FRIENDS}>
-            <FriendsIcon className={styles.iconMini} />
-            Друзья<span className={styles.notify}>1</span>
-            </A>
-          </li>
-          <li>
-            <A className={clsx("flex aic", styles.category)} href={ROUTES.MESSENGER}>
-            <MessageIcon className={styles.iconMini} />
-            Сообщения<span className={styles.notify}>1</span>
-            </A>
-          </li>
-        </ul>
-      </aside>
+      <Panel withoutOffset={withoutOffset} />
       <div className={clsx(className, styles.main)}>{children}</div>
     </MainTemplate>
   );

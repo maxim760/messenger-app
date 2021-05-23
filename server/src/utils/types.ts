@@ -1,0 +1,1 @@
+export type WithTimeStamp<T> = T & {createdAt?: string | number, updatedAt?: string | number }

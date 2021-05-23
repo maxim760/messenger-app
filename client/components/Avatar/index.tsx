@@ -2,6 +2,7 @@ import React from "react";
 import clsx from "clsx";
 
 import styles from "./Avatar.module.scss";
+import { getServerUrl } from "../../utils/getServerUrl";
 
 export type IDnd = {
   draggable: boolean;
@@ -14,11 +15,13 @@ export type IDnd = {
 };
 
 interface AvatarProps {
+  isOnline?: boolean;
   src: string;
-  width: string;
-  height: string;
+  width?: string;
+  href?: string;
+  alt?: string;
+  height?: string;
   className?: string;
-  isVoice?: boolean;
   dnd?: IDnd | {};
 }
 
@@ -27,21 +30,33 @@ export const Avatar: React.FC<AvatarProps> = ({
   width,
   height,
   className,
-  isVoice,
+  isOnline = false,
+  alt,
   dnd = {},
 }) => {
+  const sizeProps = [
+    ["width", width],
+    ["height", height],
+  ].reduce((acc, [prop, value]) => {
+    if (value) {
+      acc[prop] = value;
+    }
+    return acc;
+  }, {});
+
   return (
-    <img
-      {...dnd}
-      src={src}
-      style={{ width, height }}
-      alt="avatar"
-      className={clsx(
-        styles.avatar,
-        isVoice ? styles.avatarBorder : "",
-        className,
-        "d-ib"
-      )}
-    />
+    <div style={sizeProps} className={clsx(styles.avatarWrap, className,isOnline ? styles.avatarDot : "")}>
+      <img
+        {...dnd}
+        alt={alt || "Фото"}
+        src={src ? getServerUrl(src) : "/static/avatar-stub.png"}
+        className={clsx(
+          styles.avatar,
+          "d-ib",
+          
+        )}
+      />
+      {/* {isOnline && <div className={isOnline ? styles.avatarDot : ""} />} */}
+    </div>
   );
 };

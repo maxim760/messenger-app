@@ -1,19 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as mongooseSchema } from 'mongoose';
-import { Message } from 'src/message/schemas/message.schema';
-import { User } from 'src/user/schemas/user.schema';
+import { Message, MessageDocument } from 'src/message/schemas/message.schema';
+import { User, UserDocument } from 'src/user/schemas/user.schema';
+import { WithTimeStamp } from 'src/utils/types';
 
-export type ChatDocument = Chat & Document;
+export type ChatDocument = Chat & {_id: string} & Document & {createdAt: any};
 
 
-@Schema({timestamps: true})
+@Schema({timestamps: {createdAt: true, updatedAt: true}})
 export class Chat {
-  @Prop({ type: [{ type: mongooseSchema.Types.ObjectId, ref: 'User' }] })
-  users: User[];
+  @Prop({ type: [{ type: mongooseSchema.Types.ObjectId, ref: 'User', }], })
+  users: UserDocument[];
   @Prop({ type: [{ type: mongooseSchema.Types.ObjectId, ref: 'Message' }], default: [] })
-  messages: Message[];
+  messages: WithTimeStamp<Message>[];
   @Prop()
-  name: string
+  name ?: string
+  @Prop()
+  avatar ?: string
 
 }
 

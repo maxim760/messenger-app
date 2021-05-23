@@ -1,12 +1,43 @@
+
+.avatarWrap {
+  position: relative;
+}
 .avatar {
+  max-width: none;
+  width: inherit;
+  height: inherit;
+  display: block;
   position: relative;
   border-radius: 50%;
   background-color: #ccc;
+  // & + .avatarDot {
+  //   position: absolute;
+  //   bottom: 5%;
+  //   right: 5%;
+  //   width: 10px;
+  //   height: 10px;
+  //   background-color: red;
+  // }
 }
 
 .avatarBorder {
   border: 5px solid #fff;
   box-shadow: 0 0 0 4px #e5e0d0;
+}
+
+.avatarDot {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 6.5%;
+    right: 6.5%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4BB34B;
+    border: 2px solid white;
+  }
 }
 
 .mask {

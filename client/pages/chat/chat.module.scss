@@ -2,10 +2,19 @@
 @import "../../styles/animations.scss";
 
 .page {
-  flex: none;
+  // flex: none;
+  width: 700px !important;
+}
+
+.date {
+  font-size: 13px;
+  color: #828282;
+  margin: 10px auto;
 }
 
 .wrap {
+  // width: 700px;
+  height: 100%;
   position: relative;
   z-index: 99;
 }
@@ -78,26 +87,34 @@
 }
 
 .chat {
+  height: 100%;
   padding: 0 20px;
   padding-top: 63px;
-  padding-bottom: 80px;
+  // padding-bottom: 80px;
   width: 700px;
   margin-right: 0;
+  display: flex;
+  // overflow-y: scroll;
+  flex-direction: column;
+  justify-content: flex-end;
   // overflow-y: hidden;
 }
 
-
-
 .message {
   margin-top: 10px;
+  white-space: pre-wrap;
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 .msgWrap {
+  width: 100%;
   margin-left: 46px;
   display: flex;
   flex-direction: column;
+}
+.voiceMsg {
+  margin-right: 20%;
 }
 
 .msgName {
@@ -111,7 +128,7 @@
 }
 
 .time {
-  margin-left: 3px;
+  margin-left: 12px;
   font-weight: 400;
   font-size: 12px;
   color: #939393;
@@ -122,38 +139,116 @@
   position: fixed;
   z-index: 100;
   border-top: 2px solid $gray;
-  height: 75px;
+  // height: 75px;
   width: 700px;
   background-color: #fafbfc;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   // overflow: hidden;
+  padding: 10px;
+}
+.form {
+  width: 100%;
   display: flex;
   align-items: center;
-  padding: 10px;
   justify-content: space-between;
+}
+
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 500px !important;
+  height: 500px !important;
+}
+
+.carousel {
+  display: block;
+}
+.photoWrap {
+  padding: 50px;
+}
+
+
+.photo {
+  width: 400px !important;
+  height: 400px;
+  object-fit: contain;
+}
+
+.miniPhotos {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 10px;
+}
+.photoMsg {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+.photoMsgBig {
+  width: 171px;
+  height: 171px;
+  object-fit:cover;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.closeBtn {
+  outline: 0;
+}
+
+.closeIcon {
+  top: 0;
+  right: 0;
+  font-size: 20px;
+  background-color: rgba(black, 0.15);
+  color: $red;
+  transition: transform 0.09s ease-in;
+  &:hover {
+    transform: rotate(90deg);
+  }
 }
 
 .icon {
   font-size: 25px;
   margin: 8px;
+  margin-bottom: 12px;
+  margin-top: auto;
   transition: color 0.2s ease-in;
   &:hover {
-    color:$blue
+    color: $blue;
   }
 }
-
+.blockEmoji {
+  margin-top: auto;
+}
 .input {
   border: 1px solid rgba(gray, 0.6);
   padding: 9px 15px;
   border-radius: 10px;
-  padding-right: 85px;
+  padding-right: 100px;
+  resize: none;
+  z-index: 10;
+  outline: 0;
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
 }
-
 
 .attachField {
   border: 1px solid $darkblue;
-  box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   background-color: #fff;
   border-radius: 10px;
   overflow: hidden;
@@ -184,7 +279,6 @@
     padding: 10px;
     display: flex;
     align-items: center;
-
   }
 }
 
@@ -195,6 +289,7 @@
 }
 
 .wrapAttach {
+  place-self: flex-end;
   position: relative;
   &:hover {
     & > .attachBlock {
@@ -206,4 +301,174 @@
 .miniIcon {
   font-size: 16px;
   margin-right: 4px;
+}
+
+
+.record {
+  display: flex;
+  flex:1;
+  align-items: center;
+  height: 36px;
+  background-color: #AEB7C2;
+  border-radius: 18px;
+  padding: 6px 14px 6px 6px;
+}
+
+.audioTime {
+  color: white;
+  margin-left: auto;
+}
+
+.audioIcon {
+  margin: 0;
+  width: inherit;
+  height: inherit;
+}
+.sizeMini {
+  margin: 0;
+  padding: 4px;
+}
+
+
+
+.audioIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+
+.volume {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  // margin: 0 7px;
+  height: 20px;
+  width: 100%;
+  // background-color: orange;
+}
+
+.volumeItem {
+  border-radius: 1px;
+  width: 3px;
+  cursor: pointer;
+  height: 100%;
+  padding-left: 1px;
+  display: flex;
+  align-items: center;
+}
+
+.volumeLevel {
+  padding-left: 1px;
+  width: inherit;
+  background-color: #fff;
+  transition: background-color 0.2s ease-in;
+}
+.gray {
+  background-color: #D7DBE1;
+}
+.white {
+  background-color: #fff;
+}
+
+.msgAudioWrap {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  width: 85%;
+  &:first-child {
+    margin-top: 10px;
+  }
+}
+
+.msgAudio {
+  height: inherit;
+  display: flex;
+  flex: 1;
+  background-color: transparent;
+  transition: 0.2s ease-in;
+}
+.msgAudioActive, .msgAudio:hover {
+  background-color: #ebeef1;
+}
+
+.closeBtnAudio {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeIconAudio {
+  width: 20px;
+  height: 20px;
+  fill: #92A5B9;
+  transition: fill 0.2s ease-in;
+  &:hover {
+    fill: #657483
+  }
+}
+
+.audioName {
+  margin-left: 10px;
+  font-size: 13px;
+  color: black;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rangeAudio {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 5px;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.musicBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  margin-left: 5px;
+}
+.audioInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  & > *:first-child {
+    width: 85% !important;
+    margin-right: 20px !important;
+  }
+  & > *:nth-child(2) {
+    flex-basis: 80px !important;
+  }
+}
+
+.audioVolume {
+  width: 100%;
+  display: flex;
+  flex-basis: 80px;
+}
+
+.musicIcon {
+  height: inherit;
+  width: inherit;
+  background-color: $blue-middle;
+  border-radius: 50%;
+  fill: white
+}
+
+.audioTime {
+  text-align: right;
+  padding:0 5px;
+  font-size: 13px;
+  color: #939393
 }

@@ -19,15 +19,6 @@ export class UserStatusService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
   
-  async getAll(id: string) {
-    try {
-      const users = await this.userModel.findById(id).select("userStatus").populate("userStatus");
-      return users
-
-    } catch (error) {
-      throw new HttpException(error.message, 500);
-    }
-  }
   async setStatus({status}: CreateStatusDto, user: any) {
     try {
       if(!user) {

@@ -1,0 +1,11 @@
+@import "../../../styles/constants.scss";
+
+$main-pt: 63px;
+
+.main {
+  padding-top:$main-pt !important ;
+}
+
+.mainOffset {
+  padding-top:$main-pt - $offset !important ;
+}
